@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-api-deployment
+  labels:
+    app: my-api-demo
+spec:
+  selector:
+    matchLabels:
+      app: my-api-demo
+  replicas: 2
+  template:
+    metadata:
+      name: my-api-pod
+      labels:
+        app: my-api-demo
+    spec:
+      containers:
+        - name: my-api-demo
+          image: kuramoto/spring-boot-rest
+          ports:
+            - containerPort: 8091
