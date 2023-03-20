@@ -12,7 +12,12 @@ spec:
   metrics:
   - type: Object
     object:
-      metricName: requests_per_hour
+      metric:
+        name: requests_per_hour
+      describedObject:
+        apiVersion: apps/v1
+        kind: Deployment
+        name: my-api-deployment
       target:
         type: Value
         value: "100"
