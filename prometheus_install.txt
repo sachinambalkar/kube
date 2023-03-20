@@ -1,0 +1,23 @@
+1. Install  Helm
+wget https://get.helm.sh/helm-v3.11.2-linux-amd64.tar.gz
+tar -zxvf helm-v3.11.2-linux-amd64.tar.gz
+sudo mv linux-amd64/helm /usr/local/bin/helm
+helm version
+
+2.Create a namespace for Prometheus:
+kubectl create namespace prometheus
+
+3. Add the Prometheus Helm repository:
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+
+4. Install the Prometheus server using Helm:
+helm install prometheus prometheus-community/kube-prometheus-stack -n prometheus
+
+5. Verify that the Prometheus server is running:
+kubectl port-forward -n prometheus service/prometheus-kube-prometheus-prometheus 9090
+
+6. Install the Prometheus Adapter using Helm:
+helm install prometheus-adapter prometheus-community/prometheus-adapter -n prometheus
+
+7. Verify that the Prometheus Adapter is running:
+kubectl get apiservice v1beta1.custom.metrics.k8s.io -o yaml
