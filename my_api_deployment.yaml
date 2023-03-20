@@ -8,7 +8,7 @@ spec:
   selector:
     matchLabels:
       app: my-api-demo
-  replicas: 2
+  replicas: 1
   template:
     metadata:
       name: my-api-pod
