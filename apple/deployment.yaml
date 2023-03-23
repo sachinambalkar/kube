@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: autoscaling-deploy
+  namespace: custom-metrics
+spec:
+  selector:
+    matchLabels:
+      app: autoscaling
+      release: prom
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: autoscaling
+        release: prom
+    spec:
+      containers:
+      - name: autoscaling
+        image: quay.io/brancz/prometheus-example-app:v0.1.0
+        ports:
+        - containerPort: 8080

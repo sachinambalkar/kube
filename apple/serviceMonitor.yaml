@@ -1,0 +1,21 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: autoscaling-sm
+  namespace: monitoring
+  labels:
+    release: prom
+    app: autoscaling
+spec:
+  jobLabel: autoscalingmetrics
+  selector:
+    matchLabels:
+      release: prom
+      app: autoscaling
+  namespaceSelector:
+    matchNames:
+    - custom-metrics
+  endpoints:
+  - port: metrics-svc-port
+    interval: 10s
+    path: /metrics
