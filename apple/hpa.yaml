@@ -5,11 +5,15 @@ metadata:
   namespace: custom-metrics
 spec:
   scaleTargetRef:
-    apiVersion: apps/v1beta1
+    apiVersion: apps/v1
     kind: Deployment
     name: autoscaling-deploy
   minReplicas: 1
   maxReplicas: 5
+  selector:
+    matchLabels:
+      app: autoscaling
+      release: prom
   metrics:
   - type: Object
     object:
