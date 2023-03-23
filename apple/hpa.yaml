@@ -1,4 +1,4 @@
-apiVersion: autoscaling/v2beta1
+apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
   name: autoscaling-app-hpa
@@ -10,15 +10,15 @@ spec:
     name: autoscaling-deploy
   minReplicas: 1
   maxReplicas: 5
-  selector:
-    matchLabels:
-      app: autoscaling
-      release: prom
   metrics:
   - type: Object
     object:
       target:
-        kind: Service
-        name: autoscaling-service
-      metricName: http_requests
-      targetValue: 5
+        type: Value
+        value: 5
+      metric:
+        name: http_requests
+      describedObject:
+        apiVersion: networking.k8s.io/v1
+        kind: Ingress
+        name: main-route
