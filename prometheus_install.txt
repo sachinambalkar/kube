@@ -1,7 +1,148 @@
+$$$$$$$$$$$$$$$$$$$
+kubectl get service sample-app -o jsonpath='{ .spec.clusterIP }'
+for ((i=1;i<=10;i++)); do curl  -I -k "http://10.104.75.57/metrics"; done
+
+for ((i=1;i<=10;i++)); do curl  -I -k http://$(kubectl get service sample-app -o jsonpath='{ .spec.clusterIP }')/metrics; done
+$$$$$$$$$$$$$$$$$$
+
+######################
+1.
+git clone https://github.com/prometheus-operator/kube-prometheus.git
+
+2.
+kubectl create -f manifests/setup
+
+3.
+kubectl create -f manifests/
+
+
+#git clone https://github.com/sachinambalkar/kube.git
+
+4.
+kubectl create -f grafana-np-service.yaml -n monitoring
+
+5.
+kubectl create -f api-service.yaml
+
+6.
+kubectl apply -f prom-adapter.config.yaml
+
+7.
+kubectl rollout restart deployment prometheus-adapter -n monitoring
+
+8.
+kubectl get apiservices
+
+9.
+kubectl get --raw /apis/custom.metrics.k8s.io/v1beta2
+
+10.
+kubectl create -f sample-app.deploy.yaml
+
+11.
+kubectl create -f sample-app.service.yaml
+
+12.
+kubectl create -f sample-app.monitor.yaml
+
+13.
+kubectl apply -f prom-adapter.config.yaml
+
+14. (should get error)
+kubectl get --raw "/apis/custom.metrics.k8s.io/v1beta2/namespaces/default/pods/*/http_requests?selector=app%3Dsample-app"
+
+15.
+kubectl create -f sample-app.hpa.yaml 
+
+16. (error should be gone)
+kubectl get --raw "/apis/custom.metrics.k8s.io/v1beta2/namespaces/default/pods/*/http_requests?selector=app%3Dsample-app"
+
+17.
+kubectl describe hpa sample-app 
+#########################################
+
+
+===============================
+==============================
+1.
+git clone https://github.com/prometheus-operator/kube-prometheus.git
+
+2.
+kubectl create -f manifests/setup
+
+3.
+kubectl create -f manifests/
+
+4. 
+kubectl get --raw /apis/metrics.k8s.io/v1beta1 |  jq
+
+5.
+git clone https://github.com/sachinambalkar/kube.git
+
+6.
+kubectl config set-context --current --namespace=default
+
+7.
+cd /root/kube/prom
+
+8. 
+kubectl create -f sample-app.deploy.yaml
+9. 
+kubectl create -f sample-app.service.yaml
+
+10.
+curl http://$(kubectl get service sample-app -o jsonpath='{ .spec.clusterIP }')/metrics
+
+11.
+kubectl create -f sample-app.monitor.yaml
+
+12.
+kubectl apply -f prom-adapter.config.yaml
+
+13.
+kubectl rollout restart deployment prometheus-adapter -n monitoring
+
+14.
+kubectl get apiservices
+
+15.
+kubectl create -f api-service.yaml
+
+16.
+kubectl get --raw /apis/custom.metrics.k8s.io/v1beta2
+
+17. 
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+kubectl get service sample-app -o jsonpath='{ .spec.clusterIP }'
+for ((i=1;i<=10;i++)); do curl  -I -k "http://10.100.202.225/metrics"; done
+
+
+kubectl describe hpa sample-app
+http://10.100.142.149/metrics
+
+
+13. 
+create api-service.yaml from https://github.com/kubernetes-sigs/prometheus-adapter/blob/master/docs/walkthrough.md
+14. 
+kubectl create -f api-service.yaml
+15. 
+kubectl get --raw /apis/custom.metrics.k8s.io/v1beta2
+
+18. 
+kubectl create -f sample-app.hpa.yaml
+
+19.
+$ kubectl get --raw "/apis/custom.metrics.k8s.io/v1beta2/namespaces/default/pods/*/http_requests?selector=app%3Dsample-app" | jq
+
+
+===================================
+=================================
+
 1. Install  Helm
 wget https://get.helm.sh/helm-v3.11.2-linux-amd64.tar.gz
 tar -zxvf helm-v3.11.2-linux-amd64.tar.gz
-sudo mv linux-amd64/helm /usr/local/bin/helm
+mv linux-amd64/helm /usr/local/bin/helm
 helm version
 
 2.Create a namespace for Prometheus:
@@ -21,3 +162,117 @@ helm install prometheus-adapter prometheus-community/prometheus-adapter -n prome
 
 7. Verify that the Prometheus Adapter is running:
 kubectl get apiservice v1beta1.custom.metrics.k8s.io -o yaml
+
+
+
+
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+helm repo update
+helm install my-release prometheus-community/prometheus-adapter
+
+helm install prometheus-community prometheus-community/helm-chart
+
+
+change-name-space=>
+kubectl config set-context --current --namespace=monitoring
+
+
+kubectl config set-context --current --namespace=default
+
+
+working=>
+kubectl get --raw /apis/custom.metrics.k8s.io/v1beta1
+
+
+kubectl apply -f https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/main/bundle.yaml
+
+kubectl apply -f https://raw.githubusercontent.com/kubernetes-sigs/custom-metrics-apiserver/master/deploy/production/1-8/crd-prometheus.yaml
+
+
+
+
+
+1. 
+git clone https://github.com/techiescamp/kubernetes-prometheus
+2. 
+kubectl create namespace monitoring
+3. 
+kubectl config set-context --current --namespace=monitoring
+4. 
+kubectl create -f clusterRole.yaml
+5. 
+kubectl create -f config-map.yaml
+6. 
+kubectl create  -f prometheus-deployment.yaml 
+7. 
+kubectl get deployments --namespace=monitoring
+8. 
+kubectl create -f prometheus-service.yaml --namespace=monitoring
+9. 
+wget https://get.helm.sh/helm-v3.11.2-linux-amd64.tar.gz
+tar -zxvf helm-v3.11.2-linux-amd64.tar.gz
+mv linux-amd64/helm /usr/local/bin/helm
+10. 
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+11. 
+helm install prometheus-adapter prometheus-community/prometheus-adapter
+12. 
+kubectl get --raw /apis/custom.metrics.k8s.io/v1beta1
+
+##. 
+git clone https://github.com/sachinambalkar/kube.git
+
+##. 
+kubectl config set-context --current --namespace=default
+
+##.
+cd /root/kube/prom
+
+13. 
+create api-service.yaml from https://github.com/kubernetes-sigs/prometheus-adapter/blob/master/docs/walkthrough.md
+14. 
+kubectl create -f api-service.yaml
+15. 
+kubectl get --raw /apis/custom.metrics.k8s.io/v1beta2
+16. 
+kubectl create -f sample-app.deploy.yaml
+17. 
+kubectl create -f sample-app.service.yaml
+18. 
+kubectl create -f sample-app.hpa.yaml
+19. 
+kubectl apply -f https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/main/bundle.yaml
+20. 
+kubectl create -f sample-app.monitor.yaml
+21. 
+kubectl apply -f prom-adapter.config.yaml
+22.
+Check using api-service using=>
+kubectl get --raw="/apis/custom.metrics.k8s.io/v1beta2" | jq
+
+
+Operator
+Adaptor
+Deployment
+
+Adaptor => 1
+
+
+
+
+
+
+
+git clone https://github.com/prometheus-operator/kube-prometheus.git
+kubectl create -f kube-prometheus/manifests/
+
+
+v1beta1.metrics.k8s.io
+
+kubectl get --raw="/apis/custom.metrics.k8s.io/v1beta2" | jq
+
+v1beta1.metrics.k8s.io                 monitoring/prometheus-adapter   True        2m25s
+
+ kubectl get --raw "/apis/metrics.k8s.io/v1beta1" | jq
+
+$ kubectl get --raw "/apis/metrics.k8s.io/v1beta1/namespaces/default/pods/*/http_requests?selector=app%3Dsample-app"
