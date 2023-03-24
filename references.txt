@@ -1,0 +1,4 @@
+https://github.com/kubernetes-sigs/prometheus-adapter/blob/master/docs/walkthrough.md
+https://github.com/prometheus-operator/kube-prometheus.git
+
+https://devopscube.com/setup-prometheus-monitoring-on-kubernetes/
